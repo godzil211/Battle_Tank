@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -43,7 +44,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
+//		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
 		MoveBarrelTowards(AimDirection);
 
 	}
@@ -57,9 +58,10 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection) {
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
-	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator  %s"), *AimAsRotator.ToString());
+//	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator  %s"), *AimAsRotator.ToString());
 
-	Barrel->Elevate(5);
+	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
 }
 
 
@@ -72,4 +74,10 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
 
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+
+	Turret = TurretToSet;
 }
