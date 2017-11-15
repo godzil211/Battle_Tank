@@ -13,6 +13,25 @@ void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* 
 	RightTrack = RightTrackToSet;
 }
 
+
+void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	//No need to call Super as we're replacing the functionality here
+//	auto TankName = GetOwner()->GetName();
+	auto TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal(); // Returns the local X axis of the tank
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal(); // GetSafe normaliza el vector ( lo divide por la longitud) para crear unit vectors de -1 a +1.
+	
+	// El tanque enemigo se moverá a tu dirección
+	auto ForwardThrow = FVector::DotProduct(TankForward, AIForwardIntention);
+	//IntendMoveForward(ForwardThrow);
+
+	// El tanque enemigo enfocará a tu dirección ( importa el orden los parametros hay que probar cual funciona)
+	auto RightThrow = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+	IntendTurnRight(RightThrow);
+															//	UE_LOG(LogTemp, Warning, TEXT("%s vectoring to %s"), *TankName, *AIForwardIntention);
+}
+
+
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
 	
