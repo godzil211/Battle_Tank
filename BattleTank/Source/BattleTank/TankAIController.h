@@ -17,7 +17,16 @@ UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
 {
 	GENERATED_BODY()
-	
+
+
+// any variable exposed to blueprint must be in protected because a blueprint created 
+// from a c++ class is child of that class
+protected:
+
+	// How close can the AI tank get to the player
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float AcceptanceRadius = 3000; // in cms
+
 public:
 
 
@@ -25,6 +34,5 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	
-	// How close can the AI tank get to the player
-	float AcceptanceRadius = 3000; // in cms
+	 
 };

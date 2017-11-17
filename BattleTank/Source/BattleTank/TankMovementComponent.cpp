@@ -23,7 +23,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	
 	// El tanque enemigo se moverá a tu dirección
 	auto ForwardThrow = FVector::DotProduct(TankForward, AIForwardIntention);
-	//IntendMoveForward(ForwardThrow);
+	IntendMoveForward(ForwardThrow);
 
 	// El tanque enemigo enfocará a tu dirección ( importa el orden los parametros hay que probar cual funciona)
 	auto RightThrow = FVector::CrossProduct(TankForward, AIForwardIntention).Z;

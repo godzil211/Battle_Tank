@@ -66,8 +66,18 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection) {
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 //	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator  %s"), *AimAsRotator.ToString());
 
+
+	// Always yaw the shortest way
 	Barrel->Elevate(DeltaRotator.Pitch);
-	Turret->Rotate(DeltaRotator.Yaw);
+	if (FMath::Abs(DeltaRotator.Yaw) < 180)
+	{
+		Turret->Rotate(DeltaRotator.Yaw);
+	}
+	else
+	{
+		Turret->Rotate(-DeltaRotator.Yaw);
+
+	}
 }
 
 void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -80,9 +90,15 @@ void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+	if (RoundsLeft <= 0)
 	{
+		FiringState = EFiringState::OutOfAmmo;
 
+	}
+
+
+	else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+	{
 		FiringState = EFiringState::Reloading;
 	}
 	else if (IsBarrelMoving())
@@ -104,6 +120,20 @@ bool UTankAimingComponent::IsBarrelMoving() {
 }
  
 
+EFiringState UTankAimingComponent::GetFiringState() const
+{
+	return FiringState;
+}
+
+int UTankAimingComponent::GetRoundsLeft() const
+{
+	return RoundsLeft;
+}
+
+
+
+
+
 void UTankAimingComponent::Fire()
 {
 	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
@@ -112,7 +142,7 @@ void UTankAimingComponent::Fire()
 	auto Time = GetWorld()->GetTimeSeconds();
 	//	UE_LOG(LogTemp, Warning, TEXT("%f: Tank fires"), Time );
 
-	if (FiringState != EFiringState::Reloading) {
+	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming ) {
 
 		// Spawn a projectile at the socket location
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
@@ -122,8 +152,10 @@ void UTankAimingComponent::Fire()
 
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
+		RoundsLeft--;
 	}
 
 }
 
+ 
 
