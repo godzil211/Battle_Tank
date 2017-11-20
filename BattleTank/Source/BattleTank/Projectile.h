@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
+#include  "Runtime/Engine/Classes/PhysicsEngine/RadialForceComponent.h"
 #include "GameFrameWork/ProjectileMovementComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -38,6 +39,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UParticleSystemComponent* ImpactBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	URadialForceComponent* ExplosionForce = nullptr;
+
 
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
