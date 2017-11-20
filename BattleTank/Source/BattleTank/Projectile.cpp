@@ -43,6 +43,7 @@ void AProjectile::LaunchProjectile(float Speed) {
 
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovement->Activate();
+//	UGameplayStatics::PlaySoundAtLocation(this, Music, GetOwner()->GetActorLocation());
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)

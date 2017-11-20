@@ -26,9 +26,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//		class USoundBase* Music;
+
 public:	
 	
-
+	 
 private:
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
 
@@ -56,5 +59,5 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ProjectileDamage = 20.f;
 
-
+	 
 };
